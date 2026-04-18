@@ -1,0 +1,322 @@
+type UserId = principal;
+type UpdatePlaceInput = 
+ record {
+   address: text;
+   bestTimeToVisit: text;
+   category: PlaceCategory;
+   description: text;
+   id: EntityId;
+   imageUrls: vec text;
+   isFeatured: bool;
+   latitude: opt float64;
+   longitude: opt float64;
+   name: text;
+ };
+type UpdateHotelInput = 
+ record {
+   amenities: vec text;
+   description: text;
+   id: EntityId;
+   imageUrls: vec text;
+   location: text;
+   name: text;
+   pricePerNight: nat;
+   starRating: nat;
+   totalRooms: nat;
+ };
+type UpdateGuideInput = 
+ record {
+   bio: text;
+   experienceYears: nat;
+   id: EntityId;
+   imageUrl: text;
+   isAvailable: bool;
+   languagesSpoken: vec text;
+   name: text;
+   phoneNumber: text;
+   ratePerDay: nat;
+   specialization: GuideSpecialization;
+ };
+type Timestamp = int;
+type SessionToken = 
+ record {
+   email: text;
+   expiresAt: Timestamp;
+   fullName: text;
+   mobileNumber: text;
+   token: text;
+   userId: principal;
+   username: text;
+ };
+type RoomType = 
+ record {
+   availability: nat;
+   description: text;
+   hotelId: EntityId;
+   id: EntityId;
+   maxGuests: nat;
+   name: text;
+   pricePerNight: nat;
+ };
+type ReviewTargetType = 
+ variant {
+   guide;
+   hotel;
+ };
+type Review = 
+ record {
+   comment: text;
+   createdAt: Timestamp;
+   id: EntityId;
+   isApproved: bool;
+   rating: nat;
+   reviewerName: text;
+   targetId: EntityId;
+   targetType: ReviewTargetType;
+   userId: UserId;
+ };
+type Restaurant = 
+ record {
+   address: text;
+   createdAt: Timestamp;
+   cuisineTypes: vec text;
+   description: text;
+   hoursOpen: text;
+   id: EntityId;
+   imageUrl: text;
+   isFeatured: bool;
+   location: text;
+   name: text;
+   phone: text;
+   priceRange: nat;
+   ratingAverage: float64;
+ };
+type PlaceCategory = 
+ variant {
+   beach;
+   other;
+   temple;
+   viewpoint;
+   waterfall;
+ };
+type Place = 
+ record {
+   address: text;
+   bestTimeToVisit: text;
+   category: PlaceCategory;
+   createdAt: Timestamp;
+   description: text;
+   id: EntityId;
+   imageUrls: vec text;
+   isFeatured: bool;
+   latitude: opt float64;
+   longitude: opt float64;
+   name: text;
+ };
+type PaymentStatus = 
+ variant {
+   completed;
+   failed;
+   pending;
+ };
+type Hotel = 
+ record {
+   amenities: vec text;
+   createdAt: Timestamp;
+   description: text;
+   id: EntityId;
+   imageUrls: vec text;
+   location: text;
+   name: text;
+   pricePerNight: nat;
+   starRating: nat;
+   totalRooms: nat;
+ };
+type GuideSpecialization = 
+ variant {
+   adventure;
+   general;
+   heritage;
+   nature;
+ };
+type Guide = 
+ record {
+   bio: text;
+   createdAt: Timestamp;
+   experienceYears: nat;
+   id: EntityId;
+   imageUrl: text;
+   isAvailable: bool;
+   languagesSpoken: vec text;
+   name: text;
+   phoneNumber: text;
+   ratePerDay: nat;
+   specialization: GuideSpecialization;
+ };
+type EntityId = nat;
+type DashboardStats = 
+ record {
+   pendingReviews: nat;
+   totalBookings: nat;
+   totalGuides: nat;
+   totalHotels: nat;
+   totalPlaces: nat;
+   totalRestaurants: nat;
+   totalUsers: nat;
+ };
+type CreateRoomTypeInput = 
+ record {
+   availability: nat;
+   description: text;
+   hotelId: EntityId;
+   maxGuests: nat;
+   name: text;
+   pricePerNight: nat;
+ };
+type CreateRestaurantInput = 
+ record {
+   address: text;
+   cuisineTypes: vec text;
+   description: text;
+   hoursOpen: text;
+   imageUrl: text;
+   isFeatured: bool;
+   location: text;
+   name: text;
+   phone: text;
+   priceRange: nat;
+   ratingAverage: float64;
+ };
+type CreatePlaceInput = 
+ record {
+   address: text;
+   bestTimeToVisit: text;
+   category: PlaceCategory;
+   description: text;
+   imageUrls: vec text;
+   isFeatured: bool;
+   latitude: opt float64;
+   longitude: opt float64;
+   name: text;
+ };
+type CreateHotelInput = 
+ record {
+   amenities: vec text;
+   description: text;
+   imageUrls: vec text;
+   location: text;
+   name: text;
+   pricePerNight: nat;
+   starRating: nat;
+   totalRooms: nat;
+ };
+type CreateGuideInput = 
+ record {
+   bio: text;
+   experienceYears: nat;
+   imageUrl: text;
+   isAvailable: bool;
+   languagesSpoken: vec text;
+   name: text;
+   phoneNumber: text;
+   ratePerDay: nat;
+   specialization: GuideSpecialization;
+ };
+type CreateBookingInput = 
+ record {
+   bookingType: BookingType;
+   checkIn: text;
+   checkOut: text;
+   guestCount: nat;
+   paymentAmount: nat;
+   paymentTransactionId: opt text;
+   referenceId: EntityId;
+ };
+type BookingType = 
+ variant {
+   guide;
+   hotel;
+ };
+type BookingStatus = 
+ variant {
+   cancelled;
+   confirmed;
+   pending;
+ };
+type Booking = 
+ record {
+   bookingType: BookingType;
+   checkIn: text;
+   checkOut: text;
+   createdAt: Timestamp;
+   guestCount: nat;
+   id: EntityId;
+   paymentAmount: nat;
+   paymentStatus: PaymentStatus;
+   paymentTransactionId: opt text;
+   referenceId: EntityId;
+   referenceNumber: text;
+   status: BookingStatus;
+   userId: UserId;
+ };
+service : {
+  approveReview: (id: EntityId) -> (bool);
+  cancelBooking: (id: EntityId) -> (bool);
+  claimAdmin: () -> (bool);
+  confirmBookingPayment: (bookingId: EntityId, transactionId: text, amount:
+   nat) -> (bool);
+  createBooking: (input: CreateBookingInput) -> (Booking);
+  createGuide: (input: CreateGuideInput) -> (Guide);
+  createHotel: (input: CreateHotelInput) -> (Hotel);
+  createPlace: (input: CreatePlaceInput) -> (Place);
+  createRestaurant: (input: CreateRestaurantInput) -> (Restaurant);
+  createRoomType: (input: CreateRoomTypeInput) -> (RoomType);
+  deleteGuide: (id: EntityId) -> (bool);
+  deleteHotel: (id: EntityId) -> (bool);
+  deletePlace: (id: EntityId) -> (bool);
+  deleteRestaurant: (id: EntityId) -> (bool);
+  getBooking: (id: EntityId) -> (opt Booking) query;
+  getDashboardStats: () -> (DashboardStats);
+  getGuide: (id: EntityId) -> (opt Guide) query;
+  getHotel: (id: EntityId) -> (opt Hotel) query;
+  getPlace: (id: EntityId) -> (opt Place) query;
+  getRestaurant: (id: EntityId) -> (opt Restaurant) query;
+  getReviewsForTarget: (targetType: ReviewTargetType, targetId: EntityId) ->
+   (vec Review) query;
+  getRoomTypesForHotel: (hotelId: EntityId) -> (vec RoomType) query;
+  getUserBookings: () -> (vec Booking) query;
+  isAdminCaller: () -> (bool) query;
+  listAllBookings: () -> (vec Booking);
+  listFeaturedPlaces: () -> (vec Place) query;
+  listFeaturedRestaurants: () -> (vec Restaurant) query;
+  listGuides: () -> (vec Guide) query;
+  listHotels: () -> (vec Hotel) query;
+  listPendingReviews: () -> (vec Review);
+  listPlaces: () -> (vec Place) query;
+  listRestaurants: () -> (vec Restaurant) query;
+  loginUser: (username: text, password: text) ->
+   (variant {
+      err: text;
+      ok: SessionToken;
+    });
+  logoutUser: (token: text) -> (bool);
+  registerUser: (username: text, password: text, fullName: text,
+   mobileNumber: text, email: text) -> (variant {
+                                          err: text;
+                                          ok: text;
+                                        });
+  rejectReview: (id: EntityId) -> (bool);
+  searchGuides: (term: text, specialization: opt GuideSpecialization) ->
+   (vec Guide) query;
+  searchHotels: (term: text) -> (vec Hotel) query;
+  searchPlaces: (term: text, category: opt PlaceCategory) ->
+   (vec Place) query;
+  searchRestaurants: (term: text) -> (vec Restaurant) query;
+  updateGuide: (input: UpdateGuideInput) -> (bool);
+  updateHotel: (input: UpdateHotelInput) -> (bool);
+  updatePlace: (input: UpdatePlaceInput) -> (bool);
+  validateSession: (token: text) -> (variant {
+                                       err: text;
+                                       ok: text;
+                                     }) query;
+}

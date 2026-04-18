@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Tourism Kanyakumari – Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS Variables ─────────────────────────────────── */
+    :root {
+      --cream: #f5ede0;
+      --brown: #3a2a1a;
+      --terracotta: #c1440e;
+      --teal: #0e7490;
+      --sage: #2d6a4f;
+      --gold: #d4a017;
+      --navy: #0d1b2a;
+      --indigo: #1e2d5a;
+      --dark-green: #0f2e1b;
+      --dark-red: #2a0e0e;
+      --trans-speed: 0.5s;
+    }
+
+    /* ─── Reset & Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    /* ─── Progress Bar ──────────────────────────────────── */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 4px; z-index: 100;
+      background: linear-gradient(90deg, var(--terracotta), var(--teal));
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* ─── Slides Container ──────────────────────────────── */
+    #slides-container {
+      width: 100%; height: 100vh;
+      position: relative; overflow: hidden;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 60px 40px 80px;
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity var(--trans-speed) ease, transform var(--trans-speed) ease;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .slide.active {
+      opacity: 1; transform: translateX(0); pointer-events: all;
+    }
+    .slide.exit-left {
+      opacity: 0; transform: translateX(-60px);
+    }
+
+    /* ─── Navigation Bar (Bottom) ──────────────────────── */
+    #nav-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      padding: 14px 24px;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(12px);
+      z-index: 90;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-family: 'Inter', sans-serif;
+      font-size: 18px; font-weight: 500;
+      width: 44px; height: 44px;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-btn:hover { background: rgba(193,68,14,0.5); transform: scale(1.08); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    #slide-counter {
+      font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7);
+      min-width: 70px; text-align: center; letter-spacing: 0.05em;
+    }
+
+    /* ─── Dot Navigation (Right Side) ──────────────────── */
+    #dot-nav {
+      position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 10px; z-index: 90;
+    }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dot:hover { background: rgba(255,255,255,0.55); transform: scale(1.2); }
+    .dot.active {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      transform: scale(1.3);
+      box-shadow: 0 0 8px rgba(193,68,14,0.7);
+    }
+
+    /* ─── Slide Number Chip ─────────────────────────────── */
+    .slide-num {
+      position: absolute; top: 18px; left: 24px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4); text-transform: uppercase;
+    }
+
+    /* ─── Typography Utilities ──────────────────────────── */
+    .font-display { font-family: 'Lora', serif; }
+    .text-gold { color: var(--gold); }
+    .text-terracotta { color: var(--terracotta); }
+    .text-teal { color: #38bdf8; }
+    .text-cream { color: var(--cream); }
+
+    .display-title {
+      font-family: 'Lora', serif;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 700; line-height: 1.1;
+      background: linear-gradient(135deg, var(--gold) 0%, #f5c842 50%, var(--terracotta) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-title {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 600; line-height: 1.2;
+    }
+    .label-text {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; opacity: 0.65;
+    }
+
+    /* ─── Divider Gradient ──────────────────────────────── */
+    .gradient-divider {
+      width: 100%; max-width: 360px; height: 3px;
+      background: linear-gradient(90deg, var(--terracotta), var(--teal));
+      border-radius: 2px; margin: 20px auto;
+    }
+    .divider-left {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--terracotta), var(--teal));
+      border-radius: 2px; margin: 12px 0 20px;
+    }
+
+    /* ─── Pill / Badge ──────────────────────────────────── */
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 16px; border-radius: 100px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.9);
+      backdrop-filter: blur(4px);
+    }
+    .pill-terracotta {
+      background: rgba(193,68,14,0.2); border-color: rgba(193,68,14,0.5);
+      color: #ffb89a;
+    }
+    .pill-teal {
+      background: rgba(14,116,144,0.2); border-color: rgba(14,116,144,0.5);
+      color: #7ae0f8;
+    }
+    .pill-gold {
+      background: rgba(212,160,23,0.2); border-color: rgba(212,160,23,0.5);
+      color: var(--gold);
+    }
+    .pill-green {
+      background: rgba(45,106,79,0.2); border-color: rgba(45,106,79,0.5);
+      color: #6ee7b7;
+    }
+
+    /* ─── Card Base ─────────────────────────────────────── */
+    .card {
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      padding: 20px;
+    }
+    .card-light {
+      border-radius: 16px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(58,42,26,0.1);
+      box-shadow: 0 4px 24px rgba(58,42,26,0.08);
+      padding: 22px;
+    }
+    .card-dark {
+      border-radius: 16px;
+      background: rgba(20,12,4,0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 20px;
+    }
+
+    /* ─── Image Fill ─────────────────────────────────────── */
+    .img-cover {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+
+    /* ─── Stat Row ───────────────────────────────────────── */
+    .stat-box {
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 700; line-height: 1;
+    }
+    .stat-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; opacity: 0.6; margin-top: 4px;
+    }
+
+    /* ─── Button Demo ────────────────────────────────────── */
+    .btn-primary {
+      padding: 10px 22px; border-radius: 8px;
+      background: var(--terracotta); color: #fff;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(193,68,14,0.4);
+    }
+    .btn-secondary {
+      padding: 10px 22px; border-radius: 8px;
+      background: var(--teal); color: #fff;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(14,116,144,0.4);
+    }
+    .btn-outline {
+      padding: 10px 22px; border-radius: 8px;
+      background: transparent; color: var(--brown);
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+      border: 2px solid var(--terracotta); cursor: pointer;
+    }
+
+    /* ─── Star Rating ────────────────────────────────────── */
+    .stars { color: var(--gold); letter-spacing: 1px; font-size: 13px; }
+
+    /* ─── Status Badges ─────────────────────────────────── */
+    .badge-confirmed {
+      display: inline-block; padding: 3px 10px; border-radius: 100px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      background: rgba(45,106,79,0.25); color: #6ee7b7; border: 1px solid rgba(45,106,79,0.5);
+    }
+    .badge-pending {
+      display: inline-block; padding: 3px 10px; border-radius: 100px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      background: rgba(212,160,23,0.25); color: var(--gold); border: 1px solid rgba(212,160,23,0.5);
+    }
+
+    /* ─── Scrollbar (hidden) ─────────────────────────────── */
+    ::-webkit-scrollbar { display: none; }
+
+    /* ═══════════════════════════════════════════════════════
+       SLIDE-SPECIFIC STYLES
+    ═══════════════════════════════════════════════════════ */
+
+    /* SLIDE 1 – Title */
+    #slide-1 {
+      background: linear-gradient(165deg, #0d1b2a 0%, #1a0a00 60%, #0d2b2a 100%);
+    }
+    .s1-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80') center/cover no-repeat;
+      opacity: 0.12; filter: saturate(0.7);
+    }
+    .s1-content { position: relative; z-index: 2; text-align: center; max-width: 800px; }
+    .s1-eyebrow {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px; opacity: 0.9;
+    }
+    .s1-subtitle {
+      font-size: clamp(0.95rem, 2vw, 1.2rem); color: rgba(255,255,255,0.75);
+      margin: 16px 0 32px; font-style: italic;
+      font-family: 'Lora', serif;
+    }
+    .s1-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+    /* SLIDE 2 – Overview */
+    #slide-2 {
+      background: var(--cream);
+      flex-direction: row; padding: 60px 0 80px;
+    }
+    .s2-img-panel {
+      flex: 0 0 45%; height: 100%;
+      position: relative; overflow: hidden;
+    }
+    .s2-img-panel img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .s2-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 70%, var(--cream));
+    }
+    .s2-text-panel {
+      flex: 1; padding: 48px 48px 48px 40px;
+      display: flex; flex-direction: column; justify-content: center;
+      color: var(--brown);
+    }
+    .s2-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--terracotta); margin-bottom: 12px;
+    }
+    .s2-desc {
+      font-size: 15px; color: rgba(58,42,26,0.75); line-height: 1.7;
+      margin: 16px 0 32px;
+    }
+    .s2-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    }
+    .s2-stat {
+      background: rgba(193,68,14,0.07); border: 1px solid rgba(193,68,14,0.2);
+      border-radius: 12px; padding: 16px; text-align: center;
+    }
+    .s2-stat .num {
+      font-family: 'Lora', serif; font-size: 2rem; font-weight: 700;
+      color: var(--terracotta); line-height: 1;
+    }
+    .s2-stat .lbl {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(58,42,26,0.5); margin-top: 4px;
+    }
+
+    /* SLIDE 3 – Problem & Solution */
+    #slide-3 {
+      background: linear-gradient(160deg, #0d1b2a 0%, #091f2e 100%);
+    }
+    .s3-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+      width: 100%; max-width: 900px; margin-top: 24px;
+    }
+    .s3-card {
+      border-radius: 20px; padding: 28px;
+    }
+    .s3-problem {
+      background: rgba(180,10,10,0.12);
+      border: 1px solid rgba(220,30,30,0.25);
+    }
+    .s3-solution {
+      background: rgba(14,116,144,0.12);
+      border: 1px solid rgba(14,116,144,0.3);
+    }
+    .s3-card-title {
+      font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700;
+      margin-bottom: 18px; display: flex; align-items: center; gap: 10px;
+    }
+    .s3-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .s3-list li {
+      font-size: 13px; display: flex; align-items: flex-start; gap: 10px;
+      line-height: 1.5; color: rgba(255,255,255,0.8);
+    }
+    .s3-list li .icon { flex-shrink: 0; margin-top: 1px; }
+
+    /* SLIDE 4 – Features */
+    #slide-4 { background: var(--cream); }
+    .s4-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+      width: 100%; max-width: 1000px; margin-top: 22px;
+    }
+    .s4-card {
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(58,42,26,0.08);
+      border-radius: 14px; padding: 18px 16px;
+      box-shadow: 0 2px 12px rgba(58,42,26,0.06);
+      transition: transform 0.2s;
+    }
+    .s4-card:hover { transform: translateY(-3px); }
+    .s4-icon { font-size: 1.8rem; margin-bottom: 10px; line-height: 1; }
+    .s4-title {
+      font-size: 13px; font-weight: 700; color: var(--brown);
+      margin-bottom: 6px; font-family: 'Lora', serif;
+    }
+    .s4-desc { font-size: 11px; color: rgba(58,42,26,0.6); line-height: 1.5; }
+    .s4-accent { width: 28px; height: 2.5px; border-radius: 2px; margin-top: 10px; }
+
+    /* SLIDE 5 – Places */
+    #slide-5 {
+      background: linear-gradient(160deg, #0f2e1b 0%, #0d1b0f 100%);
+    }
+    .s5-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      width: 100%; max-width: 980px; margin-top: 20px;
+    }
+    .s5-card {
+      border-radius: 16px; overflow: hidden;
+      height: 220px; position: relative; cursor: pointer;
+    }
+    .s5-card img { width: 100%; height: 100%; object-fit: cover; }
+    .s5-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 60%);
+    }
+    .s5-card-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 16px 14px;
+    }
+    .s5-cat-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 100px;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .s5-card-name {
+      font-family: 'Lora', serif; font-size: 0.95rem; font-weight: 600;
+      color: #fff; line-height: 1.3;
+    }
+    .s5-card-count { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+    .s5-places-pills {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; margin-top: 18px; max-width: 900px;
+    }
+    .s5-pill {
+      padding: 5px 12px; border-radius: 100px;
+      font-size: 11px; font-weight: 500;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* SLIDE 6 – Hotels */
+    #slide-6 { background: var(--cream); }
+    .s6-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+      width: 100%; max-width: 920px; margin-top: 20px;
+    }
+    .s6-card {
+      border-radius: 16px; overflow: hidden;
+      background: #fff; box-shadow: 0 4px 20px rgba(58,42,26,0.1);
+    }
+    .s6-img { height: 140px; overflow: hidden; }
+    .s6-img img { width: 100%; height: 100%; object-fit: cover; }
+    .s6-body { padding: 16px; }
+    .s6-name { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; color: var(--brown); }
+    .s6-price {
+      font-size: 13px; font-weight: 700; color: var(--terracotta);
+      margin: 6px 0 8px;
+    }
+    .s6-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .s6-chip {
+      padding: 3px 9px; border-radius: 100px;
+      font-size: 10px; font-weight: 600;
+      background: rgba(14,116,144,0.1); color: var(--teal);
+      border: 1px solid rgba(14,116,144,0.2);
+    }
+    .s6-flow {
+      width: 100%; max-width: 920px;
+      display: flex; align-items: center; justify-content: center; gap: 0;
+      margin-top: 18px;
+    }
+    .s6-step {
+      flex: 1; text-align: center; padding: 12px 8px;
+      background: var(--terracotta); color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+      position: relative;
+    }
+    .s6-step:first-child { border-radius: 10px 0 0 10px; }
+    .s6-step:last-child { border-radius: 0 10px 10px 0; }
+    .s6-step:not(:last-child)::after {
+      content: ''; position: absolute; right: -12px; top: 0;
+      border-top: 22px solid transparent;
+      border-bottom: 22px solid transparent;
+      border-left: 12px solid var(--terracotta);
+      z-index: 2;
+    }
+    .s6-step:nth-child(even) { background: var(--teal); }
+    .s6-step:nth-child(even)::after { border-left-color: var(--teal); }
+    .s6-step-num { font-size: 9px; opacity: 0.7; display: block; margin-bottom: 2px; }
+
+    /* SLIDE 7 – Guides & Restaurants */
+    #slide-7 {
+      background: linear-gradient(160deg, #1a1040 0%, #0d1b2a 100%);
+      flex-direction: row; gap: 28px;
+    }
+    .s7-panel {
+      flex: 1; max-width: 440px;
+    }
+    .s7-divider {
+      width: 1px; height: 70%; background: rgba(255,255,255,0.1);
+      align-self: center;
+    }
+    .s7-title {
+      font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700;
+      margin-bottom: 6px; color: #fff;
+    }
+    .s7-sub {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 16px; opacity: 0.5;
+    }
+    .s7-guide-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border-radius: 12px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 10px;
+    }
+    .s7-guide-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--terracotta), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px; color: #fff; flex-shrink: 0;
+    }
+    .s7-guide-name { font-size: 13px; font-weight: 600; color: #fff; }
+    .s7-guide-spec { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 1px; }
+    .s7-call-badge {
+      margin-left: auto; padding: 4px 10px; border-radius: 100px;
+      background: rgba(45,106,79,0.25); color: #6ee7b7;
+      border: 1px solid rgba(45,106,79,0.4); font-size: 10px; font-weight: 700;
+      white-space: nowrap;
+    }
+    .s7-rest-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; border-radius: 10px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 8px;
+    }
+    .s7-rest-name { font-size: 12px; font-weight: 600; color: #fff; }
+    .s7-rest-cuisine { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 1px; }
+    .s7-rest-rating { font-size: 11px; color: var(--gold); font-weight: 700; }
+    .s7-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+
+    /* SLIDE 8 – Admin Dashboard */
+    #slide-8 {
+      background: linear-gradient(160deg, #060d1a 0%, #0a1520 100%);
+      align-items: flex-start;
+    }
+    .s8-wrapper {
+      width: 100%; max-width: 960px;
+      display: flex; flex-direction: column;
+      margin-top: 10px;
+    }
+    .s8-ui {
+      display: flex; border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      height: 400px;
+    }
+    .s8-sidebar {
+      width: 180px; flex-shrink: 0;
+      background: rgba(255,255,255,0.04);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 20px 0;
+    }
+    .s8-sidebar-logo {
+      padding: 0 16px 16px; margin-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-family: 'Lora', serif; font-size: 13px; font-weight: 700;
+      color: var(--gold);
+    }
+    .s8-menu-item {
+      padding: 9px 16px; font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,0.5); cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .s8-menu-item.active {
+      background: rgba(193,68,14,0.15);
+      border-left: 3px solid var(--terracotta);
+      color: #fff;
+    }
+    .s8-main {
+      flex: 1; padding: 20px 24px; overflow: hidden;
+      background: rgba(255,255,255,0.02);
+    }
+    .s8-main-title {
+      font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700;
+      color: #fff; margin-bottom: 14px;
+    }
+    .s8-stats-row {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+      margin-bottom: 16px;
+    }
+    .s8-stat {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 10px 8px; text-align: center;
+    }
+    .s8-stat-n {
+      font-family: 'Lora', serif; font-size: 1.3rem; font-weight: 700;
+      color: var(--gold); line-height: 1;
+    }
+    .s8-stat-l { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.45; margin-top: 3px; }
+    .s8-tabs {
+      display: flex; gap: 6px; margin-bottom: 12px;
+    }
+    .s8-tab {
+      padding: 5px 14px; border-radius: 6px; font-size: 11px; font-weight: 600;
+      cursor: pointer; color: rgba(255,255,255,0.4);
+    }
+    .s8-tab.active {
+      background: rgba(193,68,14,0.2); color: #ffb89a;
+      border: 1px solid rgba(193,68,14,0.4);
+    }
+    .s8-table { width: 100%; }
+    .s8-thead tr th {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+      padding: 6px 10px; text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .s8-table tr td {
+      padding: 9px 10px; font-size: 11px; color: rgba(255,255,255,0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .s8-table tr:last-child td { border-bottom: none; }
+    .s8-ref { color: var(--teal); font-weight: 600; }
+
+    /* SLIDE 9 – Tech Stack */
+    #slide-9 { background: var(--cream); }
+    .s9-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+      width: 100%; max-width: 920px; margin-top: 22px;
+    }
+    .s9-card {
+      border-radius: 18px; padding: 24px 20px;
+      background: #fff; box-shadow: 0 4px 20px rgba(58,42,26,0.08);
+      border: 1px solid rgba(58,42,26,0.06);
+      text-align: center;
+    }
+    .s9-icon { font-size: 2.4rem; margin-bottom: 14px; }
+    .s9-title {
+      font-family: 'Lora', serif; font-size: 1rem; font-weight: 700;
+      color: var(--brown); margin-bottom: 8px;
+    }
+    .s9-pills { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+    .s9-pill {
+      padding: 3px 9px; border-radius: 100px;
+      font-size: 10px; font-weight: 600;
+      color: var(--teal); background: rgba(14,116,144,0.1);
+      border: 1px solid rgba(14,116,144,0.2);
+    }
+    .s9-banner {
+      width: 100%; max-width: 920px; margin-top: 18px;
+      border-radius: 14px; padding: 18px 24px;
+      background: linear-gradient(90deg, #0d1b2a, #0e3a48);
+      border: 1px solid rgba(14,116,144,0.3);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .s9-banner-icon { font-size: 2rem; flex-shrink: 0; }
+    .s9-banner-title { font-family: 'Lora', serif; font-size: 1rem; font-weight: 700; color: #fff; }
+    .s9-banner-text { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+    /* SLIDE 10 – Design Language */
+    #slide-10 {
+      background: var(--brown);
+    }
+    .s10-wrapper { width: 100%; max-width: 900px; }
+    .s10-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      margin-top: 20px;
+    }
+    .s10-colors { display: flex; flex-direction: column; gap: 12px; }
+    .s10-swatch-row { display: flex; gap: 8px; }
+    .s10-swatch {
+      width: 40px; height: 40px; border-radius: 10px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .s10-swatch-info { display: flex; flex-direction: column; justify-content: center; }
+    .s10-swatch-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); }
+    .s10-swatch-hex { font-size: 10px; color: rgba(255,255,255,0.4); font-family: monospace; }
+    .s10-type-demo { display: flex; flex-direction: column; gap: 14px; }
+    .s10-type-display {
+      font-family: 'Lora', serif; font-size: 1.5rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), var(--terracotta));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .s10-type-body {
+      font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.5;
+    }
+    .s10-type-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .s10-components { display: flex; flex-direction: column; gap: 14px; }
+    .s10-btn-row { display: flex; gap: 8px; align-items: center; }
+    .s10-badge-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .s10-badge {
+      padding: 4px 12px; border-radius: 100px; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .s10-badge-1 { background: rgba(193,68,14,0.2); color: #ff9264; border: 1px solid rgba(193,68,14,0.4); }
+    .s10-badge-2 { background: rgba(14,116,144,0.2); color: #7ae0f8; border: 1px solid rgba(14,116,144,0.35); }
+    .s10-badge-3 { background: rgba(45,106,79,0.2); color: #6ee7b7; border: 1px solid rgba(45,106,79,0.4); }
+    .s10-badge-4 { background: rgba(212,160,23,0.2); color: var(--gold); border: 1px solid rgba(212,160,23,0.4); }
+    .s10-note {
+      margin-top: 18px; padding: 14px 18px; border-radius: 12px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px; color: rgba(255,255,255,0.6); font-style: italic;
+    }
+
+    /* SLIDE 11 – Security */
+    #slide-11 {
+      background: linear-gradient(160deg, #0f2e1b 0%, #0a1a0f 100%);
+    }
+    .s11-wrapper { width: 100%; max-width: 900px; margin-top: 16px; }
+    .s11-table-wrap {
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+    .s11-table { width: 100%; border-collapse: collapse; }
+    .s11-table thead tr { background: rgba(255,255,255,0.07); }
+    .s11-table thead th {
+      padding: 12px 16px; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-align: left;
+    }
+    .s11-table tbody tr { border-top: 1px solid rgba(255,255,255,0.05); }
+    .s11-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    .s11-table tbody td {
+      padding: 10px 16px; font-size: 12px; color: rgba(255,255,255,0.75);
+    }
+    .s11-table td:first-child { font-weight: 600; color: rgba(255,255,255,0.9); }
+    .s11-bad { color: #f87171; }
+    .s11-good { color: #6ee7b7; }
+    .s11-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    }
+    .s11-card {
+      border-radius: 14px; padding: 18px;
+      background: rgba(45,106,79,0.12);
+      border: 1px solid rgba(45,106,79,0.3);
+      text-align: center;
+    }
+    .s11-card-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .s11-card-title { font-size: 13px; font-weight: 700; color: #6ee7b7; margin-bottom: 4px; }
+    .s11-card-text { font-size: 11px; color: rgba(255,255,255,0.55); line-height: 1.4; }
+
+    /* SLIDE 12 – User Journey */
+    #slide-12 { background: var(--cream); }
+    .s12-wrapper { width: 100%; max-width: 900px; margin-top: 20px; }
+    .s12-journey {
+      display: flex; align-items: center; width: 100%;
+      margin-top: 32px; margin-bottom: 28px;
+    }
+    .s12-step {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      position: relative; z-index: 2;
+    }
+    .s12-circle {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--terracotta), #e06000);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem; color: #fff;
+      box-shadow: 0 4px 16px rgba(193,68,14,0.4);
+      position: relative; z-index: 2;
+      margin-bottom: 10px;
+    }
+    .s12-step:not(:last-child)::after {
+      content: '';
+      position: absolute; top: 26px; left: 50%; right: -50%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--terracotta), var(--teal));
+      z-index: 1;
+    }
+    .s12-step-icon { font-size: 1.2rem; position: absolute; top: -22px; }
+    .s12-step-name { font-size: 11px; font-weight: 700; color: var(--brown); text-align: center; }
+    .s12-step-sub { font-size: 10px; color: rgba(58,42,26,0.5); margin-top: 2px; text-align: center; }
+    .s12-banner {
+      width: 100%; border-radius: 14px; padding: 18px 24px;
+      background: linear-gradient(90deg, var(--teal), var(--sage));
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+    }
+    .s12-banner-text {
+      font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 700; color: #fff;
+    }
+    .s12-banner-sub { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+
+    /* SLIDE 13 – Roadmap */
+    #slide-13 {
+      background: linear-gradient(160deg, #2a0e0e 0%, #1a0707 100%);
+    }
+    .s13-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+      width: 100%; max-width: 920px; margin-top: 22px;
+    }
+    .s13-phase {
+      border-radius: 18px; padding: 24px 20px;
+    }
+    .s13-p1 {
+      background: rgba(193,68,14,0.12); border: 1px solid rgba(193,68,14,0.3);
+    }
+    .s13-p2 {
+      background: rgba(14,116,144,0.12); border: 1px solid rgba(14,116,144,0.3);
+    }
+    .s13-p3 {
+      background: rgba(45,106,79,0.12); border: 1px solid rgba(45,106,79,0.3);
+    }
+    .s13-phase-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .s13-phase-title {
+      font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 700;
+      color: #fff; margin-bottom: 16px;
+    }
+    .s13-items { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .s13-item {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.4;
+    }
+    .s13-item-dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    /* SLIDE 14 – Community Impact */
+    #slide-14 { background: var(--cream); flex-direction: row; gap: 48px; }
+    .s14-left { flex: 1; max-width: 440px; color: var(--brown); }
+    .s14-right { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .s14-impact-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      margin: 22px 0;
+    }
+    .s14-stat {
+      background: rgba(193,68,14,0.08); border: 1px solid rgba(193,68,14,0.15);
+      border-radius: 12px; padding: 14px; text-align: center;
+    }
+    .s14-stat-n {
+      font-family: 'Lora', serif; font-size: 1.5rem; font-weight: 700;
+      color: var(--terracotta); line-height: 1;
+    }
+    .s14-stat-l { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(58,42,26,0.5); margin-top: 4px; }
+    .s14-impact-card {
+      border-radius: 16px; padding: 20px;
+      background: #fff; box-shadow: 0 4px 16px rgba(58,42,26,0.07);
+      border: 1px solid rgba(58,42,26,0.06);
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .s14-impact-icon {
+      font-size: 2rem; flex-shrink: 0;
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .s14-impact-title { font-size: 14px; font-weight: 700; color: var(--brown); margin-bottom: 4px; font-family: 'Lora', serif; }
+    .s14-impact-text { font-size: 12px; color: rgba(58,42,26,0.6); line-height: 1.5; }
+    .s14-desc { font-size: 14px; color: rgba(58,42,26,0.7); line-height: 1.7; }
+    .s14-quote {
+      margin-top: 16px; padding: 14px 16px; border-radius: 10px;
+      background: rgba(193,68,14,0.06); border-left: 3px solid var(--terracotta);
+      font-size: 13px; font-style: italic; color: var(--brown);
+    }
+
+    /* SLIDE 15 – Thank You */
+    #slide-15 {
+      background: linear-gradient(165deg, #0d1b2a 0%, #1a0a00 50%, #0d2b2a 100%);
+      text-align: center;
+    }
+    .s15-bg {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=1400&q=80') center/cover no-repeat;
+      opacity: 0.1; filter: saturate(0.6);
+    }
+    .s15-content { position: relative; z-index: 2; max-width: 800px; }
+    .s15-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 10px;
+    }
+    .s15-title {
+      font-family: 'Lora', serif;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), #f5c842 40%, var(--terracotta) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.1;
+    }
+    .s15-subtitle {
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: clamp(0.9rem, 1.8vw, 1.1rem); color: rgba(255,255,255,0.65);
+      margin: 16px 0 32px;
+    }
+    .s15-cards {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    }
+    .s15-card {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px; padding: 16px;
+      backdrop-filter: blur(6px);
+    }
+    .s15-card-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
+    .s15-card-value { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); font-family: 'Lora', serif; }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .slide { padding: 50px 20px 72px; }
+      #slide-2 { flex-direction: column; padding-bottom: 72px; }
+      .s2-img-panel { flex: none; height: 200px; width: 100%; }
+      .s2-img-overlay { background: linear-gradient(0deg, var(--cream), transparent); }
+      .s2-text-panel { padding: 24px 24px 12px; }
+      .s2-stats { grid-template-columns: repeat(2, 1fr); }
+      .s3-grid { grid-template-columns: 1fr; gap: 12px; }
+      .s4-grid { grid-template-columns: repeat(2, 1fr); }
+      .s5-grid { grid-template-columns: repeat(2, 1fr); }
+      .s6-grid { grid-template-columns: 1fr 1fr; }
+      #slide-7 { flex-direction: column; gap: 16px; }
+      .s7-divider { display: none; }
+      .s8-ui { height: 360px; }
+      .s8-stats-row { grid-template-columns: repeat(3, 1fr); }
+      .s9-grid { grid-template-columns: repeat(2, 1fr); }
+      .s10-grid { grid-template-columns: 1fr; }
+      .s11-cards { grid-template-columns: 1fr; }
+      .s12-journey { flex-wrap: wrap; gap: 16px; }
+      .s12-step::after { display: none; }
+      .s13-grid { grid-template-columns: 1fr; }
+      #slide-14 { flex-direction: column; }
+      .s14-left { max-width: 100%; }
+      .s15-cards { grid-template-columns: repeat(2, 1fr); }
+      #dot-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Dot Navigation -->
+<nav id="dot-nav" aria-label="Slide navigation">
+  <!-- Populated by JS -->
+</nav>
+
+<!-- Slides -->
+<div id="slides-container">
+
+  <!-- ═══ SLIDE 1 – TITLE ═══════════════════════════════ -->
+  <section class="slide active" id="slide-1" aria-label="Title Slide">
+    <div class="s1-bg" aria-hidden="true"></div>
+    <span class="slide-num">01 / 15</span>
+    <div class="s1-content">
+      <p class="s1-eyebrow">🌊 Kanyakumari Digital Tourism Platform</p>
+      <h1 class="display-title">Smart Tourism<br/>Kanyakumari</h1>
+      <div class="gradient-divider"></div>
+      <p class="s1-subtitle">"Discover the Land's End — Powered by Blockchain"</p>
+      <div class="s1-pills">
+        <span class="pill pill-teal">📍 28 Tourist Places</span>
+        <span class="pill pill-terracotta">🏨 6 Hotels</span>
+        <span class="pill">🧭 Local Guides</span>
+        <span class="pill pill-gold">🍽️ 9 Restaurants</span>
+        <span class="pill pill-teal">⛓️ Internet Computer</span>
+        <span class="pill pill-green">🔒 Blockchain Secured</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 2 – PROJECT OVERVIEW ═══════════════════ -->
+  <section class="slide" id="slide-2" aria-label="Project Overview">
+    <span class="slide-num" style="color: rgba(58,42,26,0.35);">02 / 15</span>
+    <div class="s2-img-panel">
+      <img src="https://images.unsplash.com/photo-1606298855672-3efb63017be8?w=800&q=80" alt="Kanyakumari landscape" loading="lazy" />
+      <div class="s2-img-overlay"></div>
+    </div>
+    <div class="s2-text-panel">
+      <p class="s2-eyebrow">Project Overview</p>
+      <h2 class="section-title" style="color: var(--brown); font-family: 'Lora', serif;">India's First Blockchain-Powered<br/>Tourism Platform</h2>
+      <div class="divider-left" style="background: linear-gradient(90deg, var(--terracotta), var(--teal));"></div>
+      <p class="s2-desc">
+        Smart Tourism Kanyakumari is a comprehensive, always-online platform connecting travellers with the rich heritage, hidden gems, and vibrant culture of Kanyakumari — the southernmost tip of India where three seas meet.
+      </p>
+      <div class="s2-stats">
+        <div class="s2-stat"><div class="num">28</div><div class="lbl">Tourist Places</div></div>
+        <div class="s2-stat"><div class="num">6</div><div class="lbl">Hotels</div></div>
+        <div class="s2-stat"><div class="num">9</div><div class="lbl">Restaurants</div></div>
+        <div class="s2-stat"><div class="num">3+</div><div class="lbl">Local Guides</div></div>
+        <div class="s2-stat"><div class="num">24/7</div><div class="lbl">Always Online</div></div>
+        <div class="s2-stat"><div class="num">100%</div><div class="lbl">Secure</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 3 – PROBLEM & SOLUTION ════════════════ -->
+  <section class="slide" id="slide-3" aria-label="Problem and Solution">
+    <span class="slide-num">03 / 15</span>
+    <h2 class="section-title" style="color: #fff;">Problem &amp; Solution</h2>
+    <div class="gradient-divider" style="margin-top:12px;"></div>
+    <div class="s3-grid">
+      <div class="s3-card s3-problem">
+        <div class="s3-card-title" style="color: #f87171;">
+          <span style="font-size:1.4rem;">⚠️</span> The Problem
+        </div>
+        <ul class="s3-list">
+          <li><span class="icon" style="color:#f87171;">✗</span> No unified digital platform for Kanyakumari tourism</li>
+          <li><span class="icon" style="color:#f87171;">✗</span> Hidden gems and unique places remain undiscovered</li>
+          <li><span class="icon" style="color:#f87171;">✗</span> Local guides have no digital presence or visibility</li>
+          <li><span class="icon" style="color:#f87171;">✗</span> No reliable online hotel booking system</li>
+          <li><span class="icon" style="color:#f87171;">✗</span> Traditional data storage is insecure and goes offline</li>
+          <li><span class="icon" style="color:#f87171;">✗</span> Tribal and local communities are economically excluded</li>
+        </ul>
+      </div>
+      <div class="s3-card s3-solution">
+        <div class="s3-card-title" style="color: #7ae0f8;">
+          <span style="font-size:1.4rem;">✅</span> The Solution
+        </div>
+        <ul class="s3-list">
+          <li><span class="icon" style="color:#6ee7b7;">✓</span> Unified platform: places, hotels, guides, restaurants</li>
+          <li><span class="icon" style="color:#6ee7b7;">✓</span> 28 curated locations with HD photos &amp; details</li>
+          <li><span class="icon" style="color:#6ee7b7;">✓</span> Guide profiles with direct-call feature</li>
+          <li><span class="icon" style="color:#6ee7b7;">✓</span> Full hotel booking with date/room selection</li>
+          <li><span class="icon" style="color:#6ee7b7;">✓</span> Blockchain-powered — always online, never hackable</li>
+          <li><span class="icon" style="color:#6ee7b7;">✓</span> Promotes tribal businesses &amp; local community economy</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 4 – KEY FEATURES ═══════════════════════ -->
+  <section class="slide" id="slide-4" aria-label="Key Features">
+    <span class="slide-num" style="color: rgba(58,42,26,0.35);">04 / 15</span>
+    <h2 class="section-title" style="color: var(--brown); font-family: 'Lora', serif;">Key Features</h2>
+    <div class="divider-left" style="background: linear-gradient(90deg, var(--terracotta), var(--teal)); margin: 10px auto 0;"></div>
+    <div class="s4-grid">
+      <div class="s4-card">
+        <div class="s4-icon">📍</div>
+        <div class="s4-title">Places Directory</div>
+        <div class="s4-desc">28 curated locations across 7 categories with HD photos, descriptions, and maps.</div>
+        <div class="s4-accent" style="background: var(--terracotta);"></div>
+      </div>
+      <div class="s4-card">
+        <div class="s4-icon">🏨</div>
+        <div class="s4-title">Hotel Booking</div>
+        <div class="s4-desc">Date selection, room type, instant confirmation, and booking history.</div>
+        <div class="s4-accent" style="background: var(--teal);"></div>
+      </div>
+      <div class="s4-card">
+        <div class="s4-icon">🧭</div>
+        <div class="s4-title">Local Guides</div>
+        <div class="s4-desc">Expert guides with direct call feature, languages, and specialization profiles.</div>
+        <div class="s4-accent" style="background: var(--sage);"></div>
+      </div>
+      <div class="s4-card">
+        <div class="s4-icon">🍽️</div>
+        <div class="s4-title">Restaurants</div>
+        <div class="s4-desc">9 restaurants with cuisine filters, ratings, pricing, and direct contact info.</div>
+        <div class="s4-accent" style="background: var(--gold);"></div>
+      </div>
+      <div class="s4-card">
+        <div class="s4-icon">📊</div>
+        <div class="s4-title">User Dashboard</div>
+        <div class="s4-desc">Real-time stats, featured content previews, and personalized travel summaries.</div>
+        <div class="s4-accent" style="background: var(--terracotta);"></div>
+      </div>
+      <div class="s4-card">
+        <div class="s4-icon">⭐</div>
+        <div class="s4-title">Ratings &amp; Reviews</div>
+        <div class="s4-desc">Admin-approved rating system for hotels and guides to ensure authenticity.</div>
+        <div class="s4-accent" style="background: var(--teal);"></div>
+      </div>
+      <div class="s4-card">
+        <div class="s4-icon">🔐</div>
+        <div class="s4-title">Secure Auth</div>
+        <div class="s4-desc">Internet Identity — cryptographically secure, no passwords needed.</div>
+        <div class="s4-accent" style="background: var(--sage);"></div>
+      </div>
+      <div class="s4-card">
+        <div class="s4-icon">🛠️</div>
+        <div class="s4-title">Admin Panel</div>
+        <div class="s4-desc">Full data management: places, hotels, guides, bookings, reviews in one dashboard.</div>
+        <div class="s4-accent" style="background: var(--gold);"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 5 – TOURIST PLACES ════════════════════ -->
+  <section class="slide" id="slide-5" aria-label="Tourist Places">
+    <span class="slide-num">05 / 15</span>
+    <h2 class="section-title" style="color: #fff; font-family: 'Lora', serif;">Tourist Places</h2>
+    <div class="gradient-divider" style="margin-top: 10px;"></div>
+    <div class="s5-grid">
+      <div class="s5-card">
+        <img src="https://images.unsplash.com/photo-1595452767427-0905ad9b036d?w=400&q=80" alt="Hidden Gems" loading="lazy" />
+        <div class="s5-card-overlay"></div>
+        <div class="s5-card-content">
+          <span class="s5-cat-badge" style="background: rgba(193,68,14,0.7); color: #ffb89a;">Hidden Gems</span>
+          <div class="s5-card-name">Secret Beaches &amp; Waterfalls</div>
+          <div class="s5-card-count">8 locations • Twin Beach, Chothavilai...</div>
+        </div>
+      </div>
+      <div class="s5-card">
+        <img src="https://images.unsplash.com/photo-1535262412227-85541e910204?w=400&q=80" alt="Water Wonders" loading="lazy" />
+        <div class="s5-card-overlay"></div>
+        <div class="s5-card-content">
+          <span class="s5-cat-badge" style="background: rgba(14,116,144,0.7); color: #7ae0f8;">Water Wonders</span>
+          <div class="s5-card-name">Waterfalls &amp; Lakes</div>
+          <div class="s5-card-count">5 locations • Thirparappu, Pechiparai...</div>
+        </div>
+      </div>
+      <div class="s5-card">
+        <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=80" alt="Unique Places" loading="lazy" />
+        <div class="s5-card-overlay"></div>
+        <div class="s5-card-content">
+          <span class="s5-cat-badge" style="background: rgba(212,160,23,0.7); color: #fde68a;">Unique Places</span>
+          <div class="s5-card-name">Iconic Monuments</div>
+          <div class="s5-card-count">4 locations • Vivekananda Rock, Thiruvalluvar...</div>
+        </div>
+      </div>
+      <div class="s5-card">
+        <img src="https://images.unsplash.com/photo-1590077428593-a55bb07c4665?w=400&q=80" alt="Nearby Attractions" loading="lazy" />
+        <div class="s5-card-overlay"></div>
+        <div class="s5-card-content">
+          <span class="s5-cat-badge" style="background: rgba(45,106,79,0.7); color: #6ee7b7;">Nearby</span>
+          <div class="s5-card-name">Heritage &amp; Forts</div>
+          <div class="s5-card-count">5 locations • Padmanabhapuram, Mathur...</div>
+        </div>
+      </div>
+    </div>
+    <div class="s5-places-pills">
+      <span class="s5-pill">Vivekananda Rock</span>
+      <span class="s5-pill">Kumari Amman Temple</span>
+      <span class="s5-pill">Triveni Sangamam</span>
+      <span class="s5-pill">Thiruvalluvar Statue</span>
+      <span class="s5-pill">Gandhi Memorial</span>
+      <span class="s5-pill">Kanyakumari Beach</span>
+      <span class="s5-pill">Twin Beach</span>
+      <span class="s5-pill">Thirparappu Waterfalls</span>
+      <span class="s5-pill">Chitharal Jain Monuments</span>
+      <span class="s5-pill">Padmanabhapuram Palace</span>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 6 – HOTELS & BOOKING ══════════════════ -->
+  <section class="slide" id="slide-6" aria-label="Hotels and Booking">
+    <span class="slide-num" style="color: rgba(58,42,26,0.35);">06 / 15</span>
+    <h2 class="section-title" style="color: var(--brown); font-family: 'Lora', serif;">Hotels &amp; Booking</h2>
+    <div class="divider-left" style="background: linear-gradient(90deg, var(--terracotta), var(--teal)); margin: 8px auto 0;"></div>
+    <div class="s6-grid">
+      <div class="s6-card">
+        <div class="s6-img">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80" alt="Sparsa Resorts" loading="lazy" />
+        </div>
+        <div class="s6-body">
+          <div class="s6-name">Sparsa Resorts</div>
+          <div class="stars">★★★★★</div>
+          <div class="s6-price">₹3,600 / night</div>
+          <div class="s6-chips">
+            <span class="s6-chip">Pool</span><span class="s6-chip">Spa</span><span class="s6-chip">Sea View</span><span class="s6-chip">Restaurant</span>
+          </div>
+        </div>
+      </div>
+      <div class="s6-card">
+        <div class="s6-img">
+          <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400&q=80" alt="Annai Resorts" loading="lazy" />
+        </div>
+        <div class="s6-body">
+          <div class="s6-name">Annai Resorts</div>
+          <div class="stars">★★★★★</div>
+          <div class="s6-price">₹5,500 / night</div>
+          <div class="s6-chips">
+            <span class="s6-chip">Luxury</span><span class="s6-chip">WiFi</span><span class="s6-chip">Breakfast</span><span class="s6-chip">Gym</span>
+          </div>
+        </div>
+      </div>
+      <div class="s6-card">
+        <div class="s6-img">
+          <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&q=80" alt="Gopinivas Grand" loading="lazy" />
+        </div>
+        <div class="s6-body">
+          <div class="s6-name">Gopinivas Grand</div>
+          <div class="stars">★★★★</div>
+          <div class="s6-price">₹5,500 / night</div>
+          <div class="s6-chips">
+            <span class="s6-chip">Central</span><span class="s6-chip">Rooftop</span><span class="s6-chip">AC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="s6-flow">
+      <div class="s6-step">
+        <span class="s6-step-num">Step 1</span>
+        Choose Hotel
+      </div>
+      <div class="s6-step">
+        <span class="s6-step-num">Step 2</span>
+        Pick Dates
+      </div>
+      <div class="s6-step">
+        <span class="s6-step-num">Step 3</span>
+        Select Room
+      </div>
+      <div class="s6-step">
+        <span class="s6-step-num">Step 4</span>
+        Confirm &amp; Pay
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 7 – GUIDES & RESTAURANTS ══════════════ -->
+  <section class="slide" id="slide-7" aria-label="Guides and Restaurants">
+    <span class="slide-num">07 / 15</span>
+    <div class="s7-panel">
+      <p class="s7-sub">Local Experts</p>
+      <div class="s7-title">🧭 Certified Guides</div>
+      <div style="width:40px; height:2px; background: linear-gradient(90deg, var(--terracotta), var(--gold)); margin: 8px 0 16px; border-radius:2px;"></div>
+      <div class="s7-guide-row">
+        <div class="s7-guide-avatar">RP</div>
+        <div>
+          <div class="s7-guide-name">Rajan Pillai</div>
+          <div class="s7-guide-spec">Historical Sites • 15 years exp. • Tamil, English, Hindi</div>
+        </div>
+        <span class="s7-call-badge">📞 Direct Call</span>
+      </div>
+      <div class="s7-guide-row">
+        <div class="s7-guide-avatar" style="background: linear-gradient(135deg, var(--teal), var(--sage));">MD</div>
+        <div>
+          <div class="s7-guide-name">Meenakshi Devi</div>
+          <div class="s7-guide-spec">Cultural Heritage • 8 years exp. • Tamil, Malayalam</div>
+        </div>
+        <span class="s7-call-badge">📞 Direct Call</span>
+      </div>
+      <div class="s7-guide-row">
+        <div class="s7-guide-avatar" style="background: linear-gradient(135deg, var(--sage), #4ade80);">SK</div>
+        <div>
+          <div class="s7-guide-name">Suresh Kumar</div>
+          <div class="s7-guide-spec">Nature Trails • 12 years exp. • Tamil, English</div>
+        </div>
+        <span class="s7-call-badge">📞 Direct Call</span>
+      </div>
+    </div>
+    <div class="s7-divider"></div>
+    <div class="s7-panel">
+      <p class="s7-sub">Dining Guide</p>
+      <div class="s7-title">🍽️ Top Restaurants</div>
+      <div style="width:40px; height:2px; background: linear-gradient(90deg, var(--teal), var(--sage)); margin: 8px 0 16px; border-radius:2px;"></div>
+      <div class="s7-rest-row">
+        <div><div class="s7-rest-name">Sangam Restaurant</div><div class="s7-rest-cuisine">Seafood • Coastal</div></div>
+        <div class="s7-rest-rating">★ 4.7</div>
+      </div>
+      <div class="s7-rest-row">
+        <div><div class="s7-rest-name">Kaaviyam Heritage Kitchen</div><div class="s7-rest-cuisine">Tribal • Heritage</div></div>
+        <div class="s7-rest-rating">★ 4.8</div>
+      </div>
+      <div class="s7-rest-row">
+        <div><div class="s7-rest-name">Saravana Bhavan</div><div class="s7-rest-cuisine">South Indian • Vegetarian</div></div>
+        <div class="s7-rest-rating">★ 4.5</div>
+      </div>
+      <div class="s7-rest-row">
+        <div><div class="s7-rest-name">Leela Café</div><div class="s7-rest-cuisine">Seafood • Café</div></div>
+        <div class="s7-rest-rating">★ 4.7</div>
+      </div>
+      <div class="s7-rest-row">
+        <div><div class="s7-rest-name">Tip of India Café</div><div class="s7-rest-cuisine">Multi-cuisine</div></div>
+        <div class="s7-rest-rating">★ 4.5</div>
+      </div>
+      <div class="s7-pills">
+        <span class="pill pill-teal" style="font-size:10px; padding:3px 10px;">Seafood</span>
+        <span class="pill pill-green" style="font-size:10px; padding:3px 10px;">Vegetarian</span>
+        <span class="pill pill-terracotta" style="font-size:10px; padding:3px 10px;">South Indian</span>
+        <span class="pill pill-gold" style="font-size:10px; padding:3px 10px;">Tribal</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 8 – ADMIN DASHBOARD ═══════════════════ -->
+  <section class="slide" id="slide-8" aria-label="Admin Dashboard">
+    <span class="slide-num">08 / 15</span>
+    <div class="s8-wrapper">
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:12px;">
+        <h2 class="section-title" style="color:#fff; font-family:'Lora',serif; margin:0;">Admin Dashboard</h2>
+        <span class="pill pill-terracotta" style="font-size:10px; padding:3px 10px;">Secure Access</span>
+      </div>
+      <div class="s8-ui">
+        <div class="s8-sidebar">
+          <div class="s8-sidebar-logo">⚡ Admin Panel</div>
+          <div class="s8-menu-item">📊 Overview</div>
+          <div class="s8-menu-item active">📋 Bookings</div>
+          <div class="s8-menu-item">🏨 Hotels</div>
+          <div class="s8-menu-item">📍 Places</div>
+          <div class="s8-menu-item">🧭 Guides</div>
+          <div class="s8-menu-item">🍽️ Restaurants</div>
+          <div class="s8-menu-item">⭐ Reviews</div>
+        </div>
+        <div class="s8-main">
+          <div class="s8-main-title">Dashboard Overview</div>
+          <div class="s8-stats-row">
+            <div class="s8-stat"><div class="s8-stat-n">28</div><div class="s8-stat-l">Places</div></div>
+            <div class="s8-stat"><div class="s8-stat-n">6</div><div class="s8-stat-l">Hotels</div></div>
+            <div class="s8-stat"><div class="s8-stat-n">9</div><div class="s8-stat-l">Restaurants</div></div>
+            <div class="s8-stat"><div class="s8-stat-n">3</div><div class="s8-stat-l">Guides</div></div>
+            <div class="s8-stat"><div class="s8-stat-n" style="color:#6ee7b7;">12</div><div class="s8-stat-l">Bookings</div></div>
+            <div class="s8-stat"><div class="s8-stat-n" style="color:#f87171;">4</div><div class="s8-stat-l">Reviews</div></div>
+          </div>
+          <div class="s8-tabs">
+            <div class="s8-tab active">📋 Bookings</div>
+            <div class="s8-tab">🏨 Hotels</div>
+            <div class="s8-tab">📍 Places</div>
+            <div class="s8-tab">🧭 Guides</div>
+          </div>
+          <table class="s8-table">
+            <thead class="s8-thead">
+              <tr>
+                <th>Ref #</th><th>Guest</th><th>Hotel</th><th>Check-In</th><th>Check-Out</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="s8-ref">#BK-001</td>
+                <td>Arjun Sharma</td>
+                <td>Sparsa Resorts</td>
+                <td>Apr 18, 2026</td>
+                <td>Apr 22, 2026</td>
+                <td><span class="badge-confirmed">Confirmed</span></td>
+              </tr>
+              <tr>
+                <td class="s8-ref">#BK-002</td>
+                <td>Priya Nair</td>
+                <td>Annai Resorts</td>
+                <td>Apr 20, 2026</td>
+                <td>Apr 24, 2026</td>
+                <td><span class="badge-pending">Pending</span></td>
+              </tr>
+              <tr>
+                <td class="s8-ref">#BK-003</td>
+                <td>Ramesh Iyer</td>
+                <td>Gopinivas Grand</td>
+                <td>May 01, 2026</td>
+                <td>May 05, 2026</td>
+                <td><span class="badge-confirmed">Confirmed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 9 – TECHNOLOGY STACK ══════════════════ -->
+  <section class="slide" id="slide-9" aria-label="Technology Stack">
+    <span class="slide-num" style="color: rgba(58,42,26,0.35);">09 / 15</span>
+    <h2 class="section-title" style="color: var(--brown); font-family: 'Lora', serif;">Technology Stack</h2>
+    <div class="divider-left" style="background: linear-gradient(90deg, var(--terracotta), var(--teal)); margin: 8px auto 0;"></div>
+    <div class="s9-grid">
+      <div class="s9-card">
+        <div class="s9-icon">⚛️</div>
+        <div class="s9-title">Frontend</div>
+        <div class="s9-pills">
+          <span class="s9-pill">React 19</span>
+          <span class="s9-pill">TypeScript</span>
+          <span class="s9-pill">Tailwind CSS</span>
+          <span class="s9-pill">TanStack Router</span>
+          <span class="s9-pill">shadcn/ui</span>
+        </div>
+      </div>
+      <div class="s9-card">
+        <div class="s9-icon">🔗</div>
+        <div class="s9-title">Backend</div>
+        <div class="s9-pills">
+          <span class="s9-pill">Motoko</span>
+          <span class="s9-pill">Internet Computer</span>
+          <span class="s9-pill">Canister Storage</span>
+          <span class="s9-pill">On-chain State</span>
+        </div>
+      </div>
+      <div class="s9-card">
+        <div class="s9-icon">🔐</div>
+        <div class="s9-title">Authentication</div>
+        <div class="s9-pills">
+          <span class="s9-pill">Internet Identity</span>
+          <span class="s9-pill">Cryptographic</span>
+          <span class="s9-pill">Passwordless</span>
+          <span class="s9-pill">Role-Based</span>
+        </div>
+      </div>
+      <div class="s9-card">
+        <div class="s9-icon">🌐</div>
+        <div class="s9-title">Deployment</div>
+        <div class="s9-pills">
+          <span class="s9-pill">IC Network</span>
+          <span class="s9-pill">Always Online</span>
+          <span class="s9-pill">Decentralized</span>
+          <span class="s9-pill">No Servers</span>
+        </div>
+      </div>
+    </div>
+    <div class="s9-banner">
+      <div class="s9-banner-icon">⛓️</div>
+      <div>
+        <div class="s9-banner-title">Why Internet Computer?</div>
+        <div class="s9-banner-text">The only blockchain that hosts full-stack web applications — no AWS, no GCP, no traditional servers. Your data is sovereign, tamper-proof, and available 24/7/365 from any device worldwide.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 10 – DESIGN LANGUAGE ══════════════════ -->
+  <section class="slide" id="slide-10" aria-label="Design Language">
+    <span class="slide-num" style="color: rgba(255,255,255,0.25);">10 / 15</span>
+    <div class="s10-wrapper">
+      <h2 class="section-title" style="color: #fff; font-family: 'Lora', serif;">Design Language</h2>
+      <div class="gradient-divider" style="margin: 10px 0 0; max-width:200px;"></div>
+      <div class="s10-grid">
+        <div class="s10-colors">
+          <div class="label-text" style="color: rgba(255,255,255,0.4); margin-bottom: 12px;">Colour Palette</div>
+          <div class="s10-swatch-row">
+            <div class="s10-swatch" style="background: #c1440e;"></div>
+            <div class="s10-swatch-info"><div class="s10-swatch-name">Terracotta</div><div class="s10-swatch-hex">#c1440e</div></div>
+          </div>
+          <div class="s10-swatch-row">
+            <div class="s10-swatch" style="background: #0e7490;"></div>
+            <div class="s10-swatch-info"><div class="s10-swatch-name">Ocean Teal</div><div class="s10-swatch-hex">#0e7490</div></div>
+          </div>
+          <div class="s10-swatch-row">
+            <div class="s10-swatch" style="background: #2d6a4f;"></div>
+            <div class="s10-swatch-info"><div class="s10-swatch-name">Sage Green</div><div class="s10-swatch-hex">#2d6a4f</div></div>
+          </div>
+          <div class="s10-swatch-row">
+            <div class="s10-swatch" style="background: #d4a017;"></div>
+            <div class="s10-swatch-info"><div class="s10-swatch-name">Gold</div><div class="s10-swatch-hex">#d4a017</div></div>
+          </div>
+          <div class="s10-swatch-row">
+            <div class="s10-swatch" style="background: #f5ede0; border: 1px solid rgba(255,255,255,0.1);"></div>
+            <div class="s10-swatch-info"><div class="s10-swatch-name">Warm Cream</div><div class="s10-swatch-hex">#f5ede0</div></div>
+          </div>
+          <div class="s10-swatch-row">
+            <div class="s10-swatch" style="background: #3a2a1a;"></div>
+            <div class="s10-swatch-info"><div class="s10-swatch-name">Deep Brown</div><div class="s10-swatch-hex">#3a2a1a</div></div>
+          </div>
+        </div>
+        <div class="s10-type-demo">
+          <div class="label-text" style="color: rgba(255,255,255,0.4); margin-bottom: 12px;">Typography</div>
+          <div class="s10-type-display">Lora Serif Display</div>
+          <p class="s10-type-body">Inter sans-serif for body text — clean, readable, professional. Ideal for descriptions, labels, and navigation elements.</p>
+          <span class="s10-type-label">UPPERCASE LABEL STYLE</span>
+          <div style="margin-top:8px;">
+            <div style="font-family:'Lora',serif; font-style:italic; color:rgba(255,255,255,0.6); font-size:13px;">"Inspired by the golden sunrise over three seas"</div>
+          </div>
+        </div>
+        <div class="s10-components">
+          <div class="label-text" style="color: rgba(255,255,255,0.4); margin-bottom: 12px;">UI Components</div>
+          <div class="s10-btn-row">
+            <button class="btn-primary">Book Now</button>
+            <button class="btn-secondary">Explore</button>
+            <button class="btn-outline" style="color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3);">Learn More</button>
+          </div>
+          <div class="s10-badge-row">
+            <span class="s10-badge s10-badge-1">Beach</span>
+            <span class="s10-badge s10-badge-2">Waterfall</span>
+            <span class="s10-badge s10-badge-3">Temple</span>
+            <span class="s10-badge s10-badge-4">Heritage</span>
+          </div>
+          <div class="s10-badge-row" style="margin-top: 4px;">
+            <span class="stars">★★★★★</span>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.5); margin-left: 4px;">4.8 · 240 reviews</span>
+          </div>
+        </div>
+      </div>
+      <div class="s10-note">
+        🌅 Design inspiration: Kanyakumari's unique meeting of three seas, ancient temple spires against a golden horizon, and the rich colours of tribal textile art. Every colour token maps directly to the natural world of the destination.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 11 – SECURITY & DATA ══════════════════ -->
+  <section class="slide" id="slide-11" aria-label="Security and Data">
+    <span class="slide-num">11 / 15</span>
+    <h2 class="section-title" style="color: #fff; font-family: 'Lora', serif;">Security &amp; Data Storage</h2>
+    <div class="gradient-divider" style="margin-top: 10px;"></div>
+    <div class="s11-wrapper">
+      <div class="s11-table-wrap">
+        <table class="s11-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>📊 Excel / Traditional DB</th>
+              <th>⛓️ Internet Computer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data Security</td>
+              <td class="s11-bad">Easily copied, leaked</td>
+              <td class="s11-good">Cryptographically secured</td>
+            </tr>
+            <tr>
+              <td>Availability</td>
+              <td class="s11-bad">Offline files, server downtime</td>
+              <td class="s11-good">Always online, 24/7/365</td>
+            </tr>
+            <tr>
+              <td>Data Loss Risk</td>
+              <td class="s11-bad">File deleted = data gone</td>
+              <td class="s11-good">Replicated across thousands of nodes</td>
+            </tr>
+            <tr>
+              <td>Privacy</td>
+              <td class="s11-bad">Anyone with file access can see data</td>
+              <td class="s11-good">Role-based access control</td>
+            </tr>
+            <tr>
+              <td>Tampering</td>
+              <td class="s11-bad">Easy to modify without trace</td>
+              <td class="s11-good">Immutable, tamper-evident ledger</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="s11-cards">
+        <div class="s11-card">
+          <div class="s11-card-icon">🪪</div>
+          <div class="s11-card-title">Internet Identity</div>
+          <div class="s11-card-text">Passwordless cryptographic login — no email, no password, no breach possible</div>
+        </div>
+        <div class="s11-card">
+          <div class="s11-card-icon">🌐</div>
+          <div class="s11-card-title">Decentralized Storage</div>
+          <div class="s11-card-text">Data lives on thousands of nodes simultaneously — no single point of failure</div>
+        </div>
+        <div class="s11-card">
+          <div class="s11-card-icon">🔏</div>
+          <div class="s11-card-title">User Privacy</div>
+          <div class="s11-card-text">Booking and registration data is private by default — visible only to the user</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 12 – USER JOURNEY ══════════════════════ -->
+  <section class="slide" id="slide-12" aria-label="User Journey">
+    <span class="slide-num" style="color: rgba(58,42,26,0.35);">12 / 15</span>
+    <h2 class="section-title" style="color: var(--brown); font-family: 'Lora', serif;">User Journey</h2>
+    <div class="divider-left" style="background: linear-gradient(90deg, var(--terracotta), var(--teal)); margin: 8px auto 0;"></div>
+    <p style="font-size: 14px; color: rgba(58,42,26,0.6); margin-top: 6px; text-align: center;">From first visit to memorable experience — every step, seamlessly connected</p>
+    <div class="s12-wrapper">
+      <div class="s12-journey">
+        <div class="s12-step">
+          <div class="s12-circle">1</div>
+          <div class="s12-step-name">Visit Platform</div>
+          <div class="s12-step-sub">Open any browser</div>
+        </div>
+        <div class="s12-step">
+          <div class="s12-circle">2</div>
+          <div class="s12-step-name">Explore Places</div>
+          <div class="s12-step-sub">Browse 28 locations</div>
+        </div>
+        <div class="s12-step">
+          <div class="s12-circle">3</div>
+          <div class="s12-step-name">Find Hotel</div>
+          <div class="s12-step-sub">6 hotels, all ratings</div>
+        </div>
+        <div class="s12-step">
+          <div class="s12-circle">4</div>
+          <div class="s12-step-name">Book Stay</div>
+          <div class="s12-step-sub">Instant confirmation</div>
+        </div>
+        <div class="s12-step">
+          <div class="s12-circle">5</div>
+          <div class="s12-step-name">Contact Guide</div>
+          <div class="s12-step-sub">Direct call feature</div>
+        </div>
+        <div class="s12-step">
+          <div class="s12-circle">6</div>
+          <div class="s12-step-name">Dine &amp; Review</div>
+          <div class="s12-step-sub">9 restaurants rated</div>
+        </div>
+      </div>
+      <div class="s12-banner">
+        <span style="font-size: 1.6rem;">🌐</span>
+        <div>
+          <div class="s12-banner-text">Always Online — No Downloads Required</div>
+          <div class="s12-banner-sub">Accessible from any device, anywhere in the world, powered by the Internet Computer blockchain</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 13 – FUTURE ROADMAP ═══════════════════ -->
+  <section class="slide" id="slide-13" aria-label="Future Roadmap">
+    <span class="slide-num">13 / 15</span>
+    <h2 class="section-title" style="color: #fff; font-family: 'Lora', serif;">Future Roadmap</h2>
+    <div class="gradient-divider" style="margin-top: 10px;"></div>
+    <div class="s13-grid">
+      <div class="s13-phase s13-p1">
+        <div class="s13-phase-label" style="color: #f87171;">Phase 1 · In Progress</div>
+        <div class="s13-phase-title">Foundation &amp; Polish</div>
+        <ul class="s13-items">
+          <li class="s13-item"><span class="s13-item-dot" style="background: #f87171;"></span>Interactive map view for all 28 places</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #f87171;"></span>Personal wishlist / saved places</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #f87171;"></span>My Bookings page for users</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #f87171;"></span>Admin search &amp; filter controls</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #f87171;"></span>User registrations dashboard</li>
+        </ul>
+      </div>
+      <div class="s13-phase s13-p2">
+        <div class="s13-phase-label" style="color: #7ae0f8;">Phase 2 · Planned</div>
+        <div class="s13-phase-title">Community &amp; Bookings</div>
+        <ul class="s13-items">
+          <li class="s13-item"><span class="s13-item-dot" style="background: #7ae0f8;"></span>Community photo sharing</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #7ae0f8;"></span>Real-time hotel availability</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #7ae0f8;"></span>Restaurant table reservations</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #7ae0f8;"></span>Email booking notifications</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #7ae0f8;"></span>Dining reviews &amp; ratings</li>
+        </ul>
+      </div>
+      <div class="s13-phase s13-p3">
+        <div class="s13-phase-label" style="color: #6ee7b7;">Phase 3 · Future</div>
+        <div class="s13-phase-title">Smart Tourism</div>
+        <ul class="s13-items">
+          <li class="s13-item"><span class="s13-item-dot" style="background: #6ee7b7;"></span>AI-powered trip planner</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #6ee7b7;"></span>Multi-language support (Tamil, Hindi)</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #6ee7b7;"></span>QR code check-in for hotels</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #6ee7b7;"></span>Tourism analytics dashboard</li>
+          <li class="s13-item"><span class="s13-item-dot" style="background: #6ee7b7;"></span>Tribal artisan marketplace</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 14 – COMMUNITY IMPACT ══════════════════ -->
+  <section class="slide" id="slide-14" aria-label="Community Impact">
+    <span class="slide-num" style="color: rgba(58,42,26,0.35);">14 / 15</span>
+    <div class="s14-left">
+      <p style="font-size:11px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--terracotta); margin-bottom:10px;">Community First</p>
+      <h2 class="section-title" style="color: var(--brown); font-family:'Lora',serif;">Supporting Local &amp; Tribal Communities</h2>
+      <div class="divider-left" style="background: linear-gradient(90deg, var(--terracotta), var(--teal));"></div>
+      <p class="s14-desc">
+        Smart Tourism Kanyakumari is built to uplift the local economy — giving visibility to tribal artisans, local guides, family-run restaurants, and independent hoteliers who are often invisible to mainstream travel platforms.
+      </p>
+      <div class="s14-impact-stats">
+        <div class="s14-stat"><div class="s14-stat-n">3</div><div class="s14-stat-l">Local Guides Empowered</div></div>
+        <div class="s14-stat"><div class="s14-stat-n">9</div><div class="s14-stat-l">Local Restaurants Listed</div></div>
+        <div class="s14-stat"><div class="s14-stat-n">28</div><div class="s14-stat-l">Hidden Places Revealed</div></div>
+        <div class="s14-stat"><div class="s14-stat-n">∞</div><div class="s14-stat-l">Digital Access 24/7</div></div>
+      </div>
+      <div class="s14-quote">
+        "When local knowledge meets digital reach, communities thrive — and travellers discover the real India."
+      </div>
+    </div>
+    <div class="s14-right">
+      <div class="s14-impact-card">
+        <div class="s14-impact-icon" style="background: rgba(193,68,14,0.1);">🏺</div>
+        <div>
+          <div class="s14-impact-title">Tribal Business Visibility</div>
+          <div class="s14-impact-text">Tribal heritage restaurants like Kaaviyam Heritage Kitchen get digital presence and direct customer access for the first time — connecting ancient traditions with modern travellers.</div>
+        </div>
+      </div>
+      <div class="s14-impact-card">
+        <div class="s14-impact-icon" style="background: rgba(14,116,144,0.1);">👥</div>
+        <div>
+          <div class="s14-impact-title">Direct Guide Employment</div>
+          <div class="s14-impact-text">Local guides earn directly from tourists via the platform's direct-call feature — no middleman, full income retention, and professional digital profiles that build credibility.</div>
+        </div>
+      </div>
+      <div class="s14-impact-card">
+        <div class="s14-impact-icon" style="background: rgba(45,106,79,0.1);">🌿</div>
+        <div>
+          <div class="s14-impact-title">Sustainable Tourism</div>
+          <div class="s14-impact-text">By highlighting hidden gems and off-beaten-path locations, the platform distributes tourist footfall across 28 sites — reducing overcrowding at famous spots and spreading economic benefit.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SLIDE 15 – THANK YOU ═════════════════════════ -->
+  <section class="slide" id="slide-15" aria-label="Thank You">
+    <div class="s15-bg" aria-hidden="true"></div>
+    <span class="slide-num">15 / 15</span>
+    <div class="s15-content">
+      <p class="s15-eyebrow">🌊 Smart Tourism Kanyakumari</p>
+      <h1 class="s15-title">Thank You</h1>
+      <div class="gradient-divider"></div>
+      <p class="s15-subtitle">
+        Bridging the gap between Kanyakumari's rich heritage and the digital future —<br/>
+        one traveller, one story, one sunrise at a time.
+      </p>
+      <div class="s15-cards">
+        <div class="s15-card">
+          <div class="s15-card-label">Platform</div>
+          <div class="s15-card-value">Smart Tourism Kanyakumari</div>
+        </div>
+        <div class="s15-card">
+          <div class="s15-card-label">Technology</div>
+          <div class="s15-card-value">Internet Computer Blockchain</div>
+        </div>
+        <div class="s15-card">
+          <div class="s15-card-label">Built With</div>
+          <div class="s15-card-value" style="color: var(--gold);">☕ caffeine.ai</div>
+        </div>
+        <div class="s15-card">
+          <div class="s15-card-label">Availability</div>
+          <div class="s15-card-value" style="color: #6ee7b7;">🟢 Always Online</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div id="nav-bar" role="navigation" aria-label="Presentation navigation">
+  <button class="nav-btn" id="btn-prev" aria-label="Previous slide" title="Previous (←)">&#8592;</button>
+  <span id="slide-counter">1 / 15</span>
+  <button class="nav-btn" id="btn-next" aria-label="Next slide" title="Next (→)">&#8594;</button>
+</div>
+
+<script>
+  (function() {
+    'use strict';
+
+    const TOTAL = 15;
+    let current = 0;
+    let isAnimating = false;
+
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progress-bar');
+    const dotNav = document.getElementById('dot-nav');
+    const counter = document.getElementById('slide-counter');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    // Build dot navigation
+    for (let i = 0; i < TOTAL; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      dot.setAttribute('title', 'Slide ' + (i + 1));
+      dot.addEventListener('click', () => goTo(i));
+      dotNav.appendChild(dot);
+    }
+
+    function updateUI() {
+      // Progress bar
+      const pct = ((current + 1) / TOTAL) * 100;
+      progressBar.style.width = pct + '%';
+
+      // Counter
+      counter.textContent = (current + 1) + ' / ' + TOTAL;
+
+      // Buttons
+      btnPrev.disabled = (current === 0);
+      btnNext.disabled = (current === TOTAL - 1);
+
+      // Dots
+      document.querySelectorAll('.dot').forEach((d, i) => {
+        d.classList.toggle('active', i === current);
+      });
+    }
+
+    function goTo(index) {
+      if (isAnimating || index === current) return;
+      if (index < 0 || index >= TOTAL) return;
+
+      isAnimating = true;
+      const direction = index > current ? -1 : 1;
+
+      // Exit current slide
+      const outSlide = slides[current];
+      outSlide.style.transform = 'translateX(' + (direction * -60) + 'px)';
+      outSlide.style.opacity = '0';
+      outSlide.style.pointerEvents = 'none';
+
+      current = index;
+
+      // Enter new slide
+      const inSlide = slides[current];
+      inSlide.style.transform = 'translateX(' + (direction * 60) + 'px)';
+      inSlide.style.opacity = '0';
+      inSlide.style.transition = 'none';
+      inSlide.style.pointerEvents = 'all';
+
+      // Force reflow
+      void inSlide.offsetWidth;
+
+      inSlide.style.transition = '';
+      inSlide.style.transform = 'translateX(0)';
+      inSlide.style.opacity = '1';
+
+      // Clean up old slide after transition
+      setTimeout(() => {
+        outSlide.style.transform = 'translateX(60px)';
+        outSlide.style.transition = 'none';
+        setTimeout(() => { outSlide.style.transition = ''; }, 50);
+        isAnimating = false;
+      }, 520);
+
+      updateUI();
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+
+    btnNext.addEventListener('click', next);
+    btnPrev.addEventListener('click', prev);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next(); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prev(); }
+      if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+      if (e.key === 'End') { e.preventDefault(); goTo(TOTAL - 1); }
+    });
+
+    // Touch / swipe support
+    let touchStartX = 0;
+    let touchStartY = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 48) {
+        if (dx < 0) next(); else prev();
+      }
+    }, { passive: true });
+
+    // Initial state
+    slides.forEach((s, i) => {
+      if (i !== 0) {
+        s.style.opacity = '0';
+        s.style.transform = 'translateX(60px)';
+      }
+    });
+    updateUI();
+
+  })();
+</script>
+</body>
+</html>

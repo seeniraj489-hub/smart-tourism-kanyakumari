@@ -1,0 +1,27 @@
+{
+  "overview": "Smart Tourism Kanyakumari is a comprehensive web portal for exploring and booking tourism experiences in Kanyakumari, India. It features tourist place discovery, hotel bookings with payment, local guide profiles, restaurant listings, and an admin panel — all powered by the Internet Computer blockchain.",
+  "features": [
+    "Tourist places directory with hidden gems, water wonders, unique places, and nearby attractions",
+    "Hotel booking with Stripe payment integration (test mode)",
+    "Username/password login with secure session tokens",
+    "Google Maps integration — View on Map button and iframe embed for each place",
+    "Local guide profiles with direct call feature",
+    "Restaurant directory with cuisine filter",
+    "Admin panel with full data management",
+    "User booking history and dashboard",
+    "Modern icon styling throughout the app"
+  ],
+  "category": "travel",
+  "tags": [
+    "tourism",
+    "kanyakumari",
+    "india",
+    "booking",
+    "travel",
+    "maps",
+    "guides",
+    "hotels",
+    "restaurants"
+  ],
+  "last_updated": "2026-04-18T03:39:22.726Z"
+}

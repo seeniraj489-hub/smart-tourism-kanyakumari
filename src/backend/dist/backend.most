@@ -1,0 +1,203 @@
+// Version: 1.0.0
+type BookingStatus__866642965 = {#cancelled; #confirmed; #pending};
+type BookingType__664824651 = {#guide; #hotel};
+type Booking__1057793126 =
+  {
+    bookingType : BookingType__664824651;
+    checkIn : Text;
+    checkOut : Text;
+    createdAt : Timestamp__301639476;
+    guestCount : Nat;
+    id : EntityId__892221652;
+    paymentAmount : Nat;
+    paymentStatus : PaymentStatus__394580170;
+    paymentTransactionId : ?Text;
+    referenceId : EntityId__892221652;
+    referenceNumber : Text;
+    status : BookingStatus__866642965;
+    userId : UserId__158757552
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type EntityId__892221652 = Nat;
+type GuideSpecialization__72941279 =
+  {#adventure; #general; #heritage; #nature};
+type Guide__640439927 =
+  {
+    bio : Text;
+    createdAt : Timestamp__301639476;
+    experienceYears : Nat;
+    id : EntityId__892221652;
+    imageUrl : Text;
+    isAvailable : Bool;
+    languagesSpoken : [Text];
+    name : Text;
+    phoneNumber : Text;
+    ratePerDay : Nat;
+    specialization : GuideSpecialization__72941279
+  };
+type Hotel__552380142 =
+  {
+    amenities : [Text];
+    createdAt : Timestamp__301639476;
+    description : Text;
+    id : EntityId__892221652;
+    imageUrls : [Text];
+    location : Text;
+    name : Text;
+    pricePerNight : Nat;
+    starRating : Nat;
+    totalRooms : Nat
+  };
+type Int__270357528 = Int__616954475;
+type Int__616954475 = Int;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PaymentStatus__394580170 = {#completed; #failed; #pending};
+type PlaceCategory__407159144 =
+  {#beach; #other; #temple; #viewpoint; #waterfall};
+type Place__836971348 =
+  {
+    address : Text;
+    bestTimeToVisit : Text;
+    category : PlaceCategory__407159144;
+    createdAt : Timestamp__301639476;
+    description : Text;
+    id : EntityId__892221652;
+    imageUrls : [Text];
+    isFeatured : Bool;
+    latitude : ?Float;
+    longitude : ?Float;
+    name : Text
+  };
+type Restaurant__109554860 =
+  {
+    address : Text;
+    createdAt : Timestamp__301639476;
+    cuisineTypes : [Text];
+    description : Text;
+    hoursOpen : Text;
+    id : EntityId__892221652;
+    imageUrl : Text;
+    isFeatured : Bool;
+    location : Text;
+    name : Text;
+    phone : Text;
+    priceRange : Nat;
+    ratingAverage : Float
+  };
+type ReviewTargetType__338213329 = {#guide; #hotel};
+type Review__513345496 =
+  {
+    comment : Text;
+    createdAt : Timestamp__301639476;
+    id : EntityId__892221652;
+    isApproved : Bool;
+    rating : Nat;
+    reviewerName : Text;
+    targetId : EntityId__892221652;
+    targetType : ReviewTargetType__338213329;
+    userId : UserId__158757552
+  };
+type RoomType__368160312 =
+  {
+    availability : Nat;
+    description : Text;
+    hotelId : EntityId__892221652;
+    id : EntityId__892221652;
+    maxGuests : Nat;
+    name : Text;
+    pricePerNight : Nat
+  };
+type SessionToken__792406033 =
+  {
+    email : Text;
+    expiresAt : Timestamp__301639476;
+    fullName : Text;
+    mobileNumber : Text;
+    token : Text;
+    userId : Principal;
+    username : Text
+  };
+type Time__796480547 = Int__270357528;
+type Time__900049286 = Time__796480547;
+type Timestamp__301639476 = Time__900049286;
+type UserAccount__858141031 =
+  {
+    createdAt : Timestamp__301639476;
+    email : Text;
+    fullName : Text;
+    id : EntityId__892221652;
+    mobileNumber : Text;
+    passwordHash : Text;
+    username : Text
+  };
+type UserId__158757552 = Principal;
+actor {
+  stable adminSet : {var admin : ?Principal};
+  stable bookings :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Booking__1057793126]];
+      var elementIndex : Nat__490723111
+    };
+  stable guides :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Guide__640439927]];
+      var elementIndex : Nat__490723111
+    };
+  stable hotels :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Hotel__552380142]];
+      var elementIndex : Nat__490723111
+    };
+  stable nextBookingIdRef : {var value : Nat};
+  stable nextGuideIdRef : {var value : Nat};
+  stable nextHotelIdRef : {var value : Nat};
+  stable nextPlaceIdRef : {var value : Nat};
+  stable nextRestaurantIdRef : {var value : Nat};
+  stable nextReviewIdRef : {var value : Nat};
+  stable nextRoomTypeIdRef : {var value : Nat};
+  stable nextUserIdRef : {var value : Nat};
+  stable places :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Place__836971348]];
+      var elementIndex : Nat__490723111
+    };
+  stable restaurants :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Restaurant__109554860]];
+      var elementIndex : Nat__490723111
+    };
+  stable reviews :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Review__513345496]];
+      var elementIndex : Nat__490723111
+    };
+  stable roomTypes :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?RoomType__368160312]];
+      var elementIndex : Nat__490723111
+    };
+  stable sessions :
+    {
+      var root : Node__46230540<Text, SessionToken__792406033>;
+      var size : Nat__490723111
+    };
+  stable usersByUsername :
+    {
+      var root : Node__46230540<Text, UserAccount__858141031>;
+      var size : Nat__490723111
+    }
+};
